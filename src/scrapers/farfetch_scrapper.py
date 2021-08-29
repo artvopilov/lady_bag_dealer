@@ -3,35 +3,17 @@ from .scraper import Scrapper
 
 class FarfetchScrapper(Scrapper):
     def __init__(self, base_url, items_url, discount, sort, pages_limit):
-        super().__init__(base_url, items_url)
+        super().__init__(base_url, items_url, None, pages_limit)
         self.discount = discount
         self.sort = sort
-        self.pages_limit = pages_limit
 
-    def parse(self):
-        item_infos = []
-
-        page_number = 1
-        has_items = True
-
-        while has_items:
-            url = '{}?page={}'.format(self.items_url, page_number)
-            if self.discount:
-                url += '&discount=' + self.discount
-            if self.sort:
-                url += '&sort=' + self.sort
-            print('Url: {}'.format(url))
-
-            soup_response = self.get_soap_response(url)
-            has_items = self.parse_page_and_add_infos(soup_response, item_infos)
-            print('Item infos size: {}'.format(len(item_infos)))
-
-            page_number += 1
-
-            if self.pages_limit and page_number > self.pages_limit:
-                break
-
-        return item_infos
+    def get_current_page_url(self, page_number):
+        url = '{}?page={}'.format(self.items_url, page_number)
+        if self.discount:
+            url += '&discount=' + self.discount
+        if self.sort:
+            url += '&sort=' + self.sort
+        return url
 
     def parse_page_and_add_infos(self, soup_response, item_infos):
         items_list = soup_response.find('ul', attrs={'data-testid': 'product-card-list'})
