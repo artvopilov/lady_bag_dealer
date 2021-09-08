@@ -13,7 +13,7 @@ class LamodaScrapper(Scrapper):
             url += '&brands=' + self.brands
         return url
 
-    def parse_page_and_add_infos(self, soup_response, item_infos):
+    def parse_page_and_add_infos(self, soup_response, item_infos, page_number):
         items = soup_response.find_all('a', class_='products-list-item__link link')
         if len(items) == 0:
             return False

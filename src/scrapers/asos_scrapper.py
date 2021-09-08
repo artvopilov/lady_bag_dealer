@@ -2,9 +2,9 @@ from .scraper import Scrapper
 
 
 HEADERS = {
-    'user-agent' : 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                   'Chrome/80.0.3987.163 Safari/537.36',
-    'accept' : '*/*'
+    'user-agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                  'Chrome/80.0.3987.163 Safari/537.36',
+    'accept': '*/*'
 }
 
 
@@ -16,7 +16,7 @@ class AsosScrapper(Scrapper):
         url = '{}&page={}'.format(self.items_url, page_number)
         return url
 
-    def parse_page_and_add_infos(self, soup_response, item_infos):
+    def parse_page_and_add_infos(self, soup_response, item_infos, page_number):
         items_list = soup_response.find('div', attrs={'data-auto-id': 'productList'})
         items = items_list.find_all('article', attrs={'data-auto-id': 'productTile'})
         if len(items) == 0:

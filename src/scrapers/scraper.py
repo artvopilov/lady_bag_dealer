@@ -16,16 +16,18 @@ class Scrapper(ABC):
         page_number = 1
         has_items = True
 
-        while has_items:
+        while True:
             url = self.get_current_page_url(page_number)
             print('Url: {}'.format(url))
 
             soup_response = self.get_soap_response(url, self.headers)
-            has_items = self.parse_page_and_add_infos(soup_response, item_infos)
+            has_items = self.parse_page_and_add_infos(soup_response, item_infos, page_number)
             print('Item infos size: {}'.format(len(item_infos)))
 
-            page_number += 1
+            if not has_items:
+                break
 
+            page_number += 1
             if self.pages_limit and page_number > self.pages_limit:
                 break
 
@@ -36,7 +38,7 @@ class Scrapper(ABC):
         pass
 
     @abstractmethod
-    def parse_page_and_add_infos(self, soup_response, item_infos):
+    def parse_page_and_add_infos(self, soup_response, item_infos, page_number):
         pass
 
     @staticmethod
