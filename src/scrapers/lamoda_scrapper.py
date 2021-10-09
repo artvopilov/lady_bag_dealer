@@ -1,4 +1,5 @@
 from .scraper import Scrapper
+from entities.bag import Bag
 
 
 class LamodaScrapper(Scrapper):
@@ -13,29 +14,26 @@ class LamodaScrapper(Scrapper):
             url += '&brands=' + self.brands
         return url
 
-    def parse_page_and_add_infos(self, soup_response, item_infos, page_number):
+    def parse_page_and_add_infos(self, soup_response, bags, page_number):
         items = soup_response.find_all('a', class_='products-list-item__link link')
         if len(items) == 0:
             return False
 
         for item in items:
-            brand = item.find('div', class_='products-list-item__brand')
-            name = brand.find(text=True, recursive=False).strip()
+            item_info = item.find('div', attrs={'data-category': 'Сумки'})
 
-            prices = item.find('span', class_='price').find_all('span')
-            price = float(prices[-2].text.replace(' ', ''))
+            brand = item_info.attrs['data-brand'].lower()
+            color = item_info.attrs['data-color-family'].lower()
+            price = float(item_info.attrs['data-price'])
+            origin_price = float(item_info.attrs['data-price-origin'])
 
-            if len(prices) < 3:
-                continue
+            image_url_list = item_info.attrs['data-image'].split('/')
+            image_url_list[3] = 'img600x866'
+            image_url = 'https:' + '/'.join(image_url_list)
 
-            old_price = float(prices[0].text.replace(' ', ''))
-            link = self.base_url + item.attrs['href']
+            url = self.base_url + item.attrs['href']
 
-            item_info = {
-                'name': name,
-                'old_price': old_price,
-                'price': price,
-                'link': link}
-            item_infos.append(item_info)
+            bag = Bag(brand, None, color, price, origin_price, image_url, url)
+            bags.append(bag)
 
         return True

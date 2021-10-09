@@ -11,27 +11,24 @@ class Scrapper(ABC):
         self.headers = headers
 
     def parse(self):
-        item_infos = []
+        bags = []
 
         page_number = 1
         has_items = True
 
-        while True:
+        while has_items:
             url = self.get_current_page_url(page_number)
             print('Url: {}'.format(url))
 
             soup_response = self.get_soap_response(url, self.headers)
-            has_items = self.parse_page_and_add_infos(soup_response, item_infos, page_number)
-            print('Item infos size: {}'.format(len(item_infos)))
-
-            if not has_items:
-                break
+            has_items = self.parse_page_and_add_infos(soup_response, bags, page_number)
+            print('Bag infos size: {}'.format(len(bags)))
 
             page_number += 1
             if self.pages_limit and page_number > self.pages_limit:
                 break
 
-        return item_infos
+        return bags
 
     @abstractmethod
     def get_current_page_url(self, page_number):

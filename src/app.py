@@ -27,35 +27,35 @@ STOCKMANN_ITEMS_URL = '{}/category/222-zhenskie-sumki'.format(STOCKMANN_BASE_URL
 
 
 # BRANDS = ['love moschino']
-# BRANDS = ['karl lagerfeld']
-BRANDS = []
+BRANDS = ['karl lagerfeld']
+# BRANDS = []
 
 if __name__ == '__main__':
     print('Started')
 
-    items_on_sale = []
+    bags_on_sale = []
 
     lamoda_scrapper = LamodaScrapper(LAMODA_BASE_URL, LAMODA_ITEMS_URL, LAMODA_BRANDS, LAMODA_IS_SALE)
-    lamoda_items_on_sale = lamoda_scrapper.parse()
-    items_on_sale.extend(lamoda_items_on_sale)
+    lamoda_bags_on_sale = lamoda_scrapper.parse()
+    bags_on_sale.extend(lamoda_bags_on_sale)
 
-    farfetch_scrapper = FarfetchScrapper(FARFETCH_BASE_URL, FARFETCH_ITEMS_URL, FARFETCH_DISCOUNT,
-                                         FARFETCH_SORT, FARFETCH_PAGE_LIMIT)
-    farfetch_items_on_sale = farfetch_scrapper.parse()
-    items_on_sale.extend(farfetch_items_on_sale)
-
-    asos_scrapper = AsosScrapper(ASOS_BASE_URL, ASOS_ITEMS_URL)
-    asos_items_on_sale = asos_scrapper.parse()
-    items_on_sale.extend(asos_items_on_sale)
-
-    stockmann_scrapper = StockmannScrapper(STOCKMANN_BASE_URL, STOCKMANN_ITEMS_URL)
-    stockmann_items_on_sale = stockmann_scrapper.parse()
-    items_on_sale.extend(stockmann_items_on_sale)
+    # farfetch_scrapper = FarfetchScrapper(FARFETCH_BASE_URL, FARFETCH_ITEMS_URL, FARFETCH_DISCOUNT,
+    #                                      FARFETCH_SORT, FARFETCH_PAGE_LIMIT)
+    # farfetch_bags_on_sale = farfetch_scrapper.parse()
+    # bags_on_sale.extend(farfetch_bags_on_sale)
+    #
+    # asos_scrapper = AsosScrapper(ASOS_BASE_URL, ASOS_ITEMS_URL)
+    # asos_bags_on_sale = asos_scrapper.parse()
+    # bags_on_sale.extend(asos_bags_on_sale)
+    #
+    # stockmann_scrapper = StockmannScrapper(STOCKMANN_BASE_URL, STOCKMANN_ITEMS_URL)
+    # stockmann_bags_on_sale = stockmann_scrapper.parse()
+    # bags_on_sale.extend(stockmann_bags_on_sale)
 
     if BRANDS:
-        items_on_sale = list(filter(lambda x: any([b in x['name'].lower() for b in BRANDS]), items_on_sale))
+        bags_on_sale = list(filter(lambda x: any([b in x.brand for b in BRANDS]), bags_on_sale))
 
-    items_on_sale.sort(key=lambda x: 1 - x['price'] / x['old_price'], reverse=True)
+    bags_on_sale.sort(key=lambda x: -x.price / x.origin_price, reverse=True)
 
-    for item in items_on_sale[:1000]:
-        print(item)
+    for bag in bags_on_sale[:1000]:
+        print(bag)
