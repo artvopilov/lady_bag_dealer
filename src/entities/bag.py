@@ -14,6 +14,8 @@ class Bag:
                f'Image url: {self.image_url}, Url: {self.url}'
 
     def __eq__(self, other):
-        return self.brand == other.brand and self.model == other.model and self.color == other.color
+        return self.brand is not None and self.brand == other.brand \
+               and self.model is not None and self.model == other.model \
+               and self.color is not None and self.color == other.color
 
 

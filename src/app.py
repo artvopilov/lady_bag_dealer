@@ -18,16 +18,14 @@ FARFETCH_SORT = '5'
 FARFETCH_PAGE_LIMIT = 30
 
 ASOS_BASE_URL = 'https://www.asos.com/ru'
-ASOS_ITEMS_URL = '{}/women/rasprodazha/aksessuary/cat/?cid=1929&nlid=%D1%80%D0%B0%D1%81%D0%BF%D1%80%D0%BE%D0%B4%D0%B0' \
-                '%D0%B6%D0%B0%7C%D0%B0%D0%BA%D1%81%D0%B5%D1%81%D1%81%D1%83%D0%B0%D1%80%D1%8B&refine' \
-                '=attribute_1047:8283'.format(ASOS_BASE_URL)
+ASOS_ITEMS_URL = '{}/women/rasprodazha/aksessuary/cat/?cid=1929&refine=attribute_1047:8283'.format(ASOS_BASE_URL)
 
 STOCKMANN_BASE_URL = 'https://stockmann.ru'
 STOCKMANN_ITEMS_URL = '{}/category/222-zhenskie-sumki'.format(STOCKMANN_BASE_URL)
 
 
-# BRANDS = ['love moschino']
-BRANDS = ['karl lagerfeld']
+BRANDS = ['love moschino']
+# BRANDS = ['karl lagerfeld']
 # BRANDS = []
 
 if __name__ == '__main__':
@@ -43,11 +41,11 @@ if __name__ == '__main__':
     #                                      FARFETCH_SORT, FARFETCH_PAGE_LIMIT)
     # farfetch_bags_on_sale = farfetch_scrapper.parse()
     # bags_on_sale.extend(farfetch_bags_on_sale)
-    #
-    # asos_scrapper = AsosScrapper(ASOS_BASE_URL, ASOS_ITEMS_URL)
-    # asos_bags_on_sale = asos_scrapper.parse()
-    # bags_on_sale.extend(asos_bags_on_sale)
-    #
+
+    asos_scrapper = AsosScrapper(ASOS_BASE_URL, ASOS_ITEMS_URL)
+    asos_bags_on_sale = asos_scrapper.parse()
+    bags_on_sale.extend(asos_bags_on_sale)
+
     # stockmann_scrapper = StockmannScrapper(STOCKMANN_BASE_URL, STOCKMANN_ITEMS_URL)
     # stockmann_bags_on_sale = stockmann_scrapper.parse()
     # bags_on_sale.extend(stockmann_bags_on_sale)
