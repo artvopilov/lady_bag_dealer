@@ -1,4 +1,5 @@
 from .scraper import Scrapper
+from entities.bag import Bag
 
 
 HEADERS = {
@@ -15,29 +16,26 @@ class StockmannScrapper(Scrapper):
         url = '{}/?page_list={}'.format(self.items_url, page_number)
         return url
 
-    def parse_page_and_add_infos(self, soup_response, item_infos, page_number):
-        items = soup_response.find_all('div', class_='catalog-item js-catalog-item')
+    def parse_page_and_add_infos(self, soup_response, bags, page_number):
+        items = soup_response.find_all(lambda tag: tag.name == 'div' and 'data-product-id' in tag.attrs)
         if len(items) == 0:
             return False
 
         for item in items:
-            brand = item.find('a', class_='catalog-item__name')
-            name = brand.find('span').find(text=True, recursive=False).strip()
+            name_info = item.find('a', class_='catalog-item__name')
+            brand = name_info.find('span').find(text=True, recursive=False).strip().lower()
+            model = name_info.find('h2').find(text=True, recursive=False).strip().lower()
 
             prices = item.find('a', class_='catalog-item__prices').find_all('span')
             if len(prices) < 2:
                 continue
-
             price = float(''.join(filter(str.isdigit, prices[0].text)))
-            old_price = float(''.join(filter(str.isdigit, prices[1].text)))
+            origin_price = float(''.join(filter(str.isdigit, prices[1].text)))
 
-            link = self.base_url + brand.attrs['href']
+            image_url = self.base_url + item.attrs['data-src']
+            url = self.base_url + name_info.attrs['href']
 
-            item_info = {
-                'name': name,
-                'old_price': old_price,
-                'price': price,
-                'link': link}
-            item_infos.append(item_info)
+            bag = Bag(brand, model, None, price, origin_price, image_url, url)
+            bags.append(bag)
 
         return True
